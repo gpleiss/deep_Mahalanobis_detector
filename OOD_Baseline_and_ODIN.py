@@ -16,7 +16,7 @@ from torchvision import transforms
 from torch.autograd import Variable
 
 parser = argparse.ArgumentParser(description='PyTorch code: Mahalanobis detector')
-parser.add_argument('--batch_size', type=int, default=200, metavar='N', help='batch size for data loader')
+parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size for data loader')
 parser.add_argument('--dataset', required=True, help='cifar10 | cifar100 | svhn')
 parser.add_argument('--dataroot', default='./data', help='path to dataset')
 parser.add_argument('--outf', default='./output/', help='folder to output results')
@@ -39,9 +39,9 @@ def main():
     if args.dataset == 'cifar100':
         args.num_classes = 100
     if args.dataset == 'svhn':
-        out_dist_list = ['cifar10', 'imagenet_resize', 'lsun_resize']
+        out_dist_list = ['cifar10', 'imagenet_resize',] #'lsun_resize']
     else:
-        out_dist_list = ['svhn', 'imagenet_resize', 'lsun_resize']
+        out_dist_list = ['svhn', 'imagenet_resize',] #'lsun_resize']
         
     # load networks
     if args.net_type == 'densenet':
@@ -50,7 +50,7 @@ def main():
             model.load_state_dict(torch.load(pre_trained_net, map_location = "cuda:" + str(args.gpu)))
         else:
             model = torch.load(pre_trained_net, map_location = "cuda:" + str(args.gpu))
-        in_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((125.3/255, 123.0/255, 113.9/255), (63.0/255, 62.1/255.0, 66.7/255.0)),])
+        in_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.5071, 0.4867, 0.4408], [0.2675, 0.2565, 0.2761]),])
     elif args.net_type == 'resnet':
         model = models.ResNet34(num_c=args.num_classes)
         model.load_state_dict(torch.load(pre_trained_net, map_location = "cuda:" + str(args.gpu)))
